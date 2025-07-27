@@ -1,132 +1,255 @@
 package mariomedhatGo.pageopjects;
 
-import java.time.Duration;
-import java.util.List;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class RegPage {
+public class RegPage extends BasePage {
 
-	WebDriver driver;
-	
+	// Constructor
 	public RegPage(WebDriver driver) {
-		//super(driver);
-		this.driver = driver;
+		super(driver); // Call BasePage constructor
 		PageFactory.initElements(driver, this);
 	}
-	
+
+	// ===== Page Elements =====
 	@FindBy(css = "input[placeholder='Name']")
-	WebElement userName;
-	
+	private WebElement userName;
+
 	@FindBy(css = "input[data-qa='signup-email']")
-	WebElement userEmail;
-	
+	private WebElement userEmail;
+
 	@FindBy(css = "button[data-qa='signup-button']")
-	WebElement regBtn;
-	
+	private WebElement regBtn;
+
 	@FindBy(id = "id_gender1")
-	WebElement maleChkbox;
-	
+	private WebElement maleChkbox;
+
+	@FindBy(id = "id_gender2")
+	private WebElement femaleChkbox;
+
 	@FindBy(id = "password")
-	WebElement password;
-	
+	private WebElement password;
+
 	@FindBy(id = "days")
-	WebElement daySelect;
-	
+	private WebElement daySelect;
+
 	@FindBy(id = "months")
-	WebElement monthSelect;
-	
+	private WebElement monthSelect;
+
 	@FindBy(id = "years")
-	WebElement yearSelect;
-	
+	private WebElement yearSelect;
+
 	@FindBy(id = "newsletter")
-	WebElement newsLetter;
-	
+	private WebElement newsLetter;
+
 	@FindBy(id = "optin")
-	WebElement optinChkbox;
-	
+	private WebElement optinChkbox;
+
 	@FindBy(id = "first_name")
-	WebElement userFname;
-	
+	private WebElement userFname;
+
 	@FindBy(id = "last_name")
-	WebElement userLname;
-	
+	private WebElement userLname;
+
 	@FindBy(id = "company")
-	WebElement companyName;
-	
+	private WebElement companyName;
+
 	@FindBy(id = "address1")
-	WebElement addressOne;
-	
+	private WebElement addressOne;
+
 	@FindBy(id = "address2")
-	WebElement addressTwo;
-	
+	private WebElement addressTwo;
+
 	@FindBy(id = "country")
-	WebElement countrySelect;
-	
+	private WebElement countrySelect;
+
 	@FindBy(id = "state")
-	WebElement stateName;
-	
+	private WebElement stateName;
+
 	@FindBy(id = "city")
-	WebElement cityName;
-	
+	private WebElement cityName;
+
 	@FindBy(id = "zipcode")
-	WebElement zipNumber;
-	
+	private WebElement zipNumber;
+
 	@FindBy(id = "mobile_number")
-	WebElement mobNumber;
-	
+	private WebElement mobNumber;
+
 	@FindBy(css = "button[data-qa='create-account']")
-	WebElement createBtn;
-	
+	private WebElement createBtn;
+
 	@FindBy(css = "a[data-qa='continue-button']")
-	WebElement continueBtn;
-	
-	public void RegisterWeb(String fname ,String email) {
-		userName.sendKeys(fname);
-		userEmail.sendKeys(email);
-		regBtn.click();
+	private WebElement continueBtn;
+
+	// Success/Error message elements
+	@FindBy(xpath = "//h2[contains(text(),'Account Created!')]")
+	private WebElement accountCreatedMsg;
+
+	@FindBy(xpath = "//p[contains(text(),'Email Address already exist!')]")
+	private WebElement emailExistsMsg;
+
+	// ===== Page Actions =====
+
+	/**
+	 * Enter signup information (name and email)
+	 */
+	public void enterSignupInfo(String name, String email) {
+		try {
+			sendKeysToElement(userName, name);
+			sendKeysToElement(userEmail, email);
+			clickElement(regBtn);
+			System.out.println("✅ Signup info entered successfully");
+		} catch (Exception e) {
+			System.err.println("❌ Error entering signup info: " + e.getMessage());
+			throw e;
+		}
 	}
-	
-	public void RegisterWebComplete(String pwd , String Fname , String Lname , String compName ,String addOne , String addTwo , String stat , String city , String zip , String mobile) {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.visibilityOf(maleChkbox));
-		
-		maleChkbox.click();
-		password.sendKeys(pwd);
-		Select day = new Select(daySelect);
-		day.selectByValue("2");
-		Select month = new Select(monthSelect);
-		month.selectByVisibleText("May");
-		Select year = new Select(yearSelect);
-	    year.selectByValue("2000");
-	    newsLetter.click();
-	    optinChkbox.click();
-	    userFname.sendKeys(Fname);
-	    userLname.sendKeys(Lname);
-	    companyName.sendKeys(compName);
-	    addressOne.sendKeys(addOne);
-	    addressTwo.sendKeys(addTwo);
-	    System.out.println("Address 2 done");
-	    Select contry = new Select(countrySelect);
-	    contry.selectByVisibleText("United States");
-	    System.out.println("Country done");
-	    stateName.sendKeys(stat);
-	    cityName.sendKeys(city);
-	    zipNumber.sendKeys(zip);
-	    mobNumber.sendKeys(mobile);
-	    createBtn.click();
+
+	/**
+	 * Fill registration form with basic info
+	 */
+	public void fillBasicAccountInfo(String pwd, String day, String month, String year, String gender) {
+		try {
+			// Select gender
+			if (gender.equalsIgnoreCase("male")) {
+				clickElement(maleChkbox);
+			} else {
+				clickElement(femaleChkbox);
+			}
+
+			// Enter password
+			sendKeysToElement(password, pwd);
+
+			// Select birth date
+			selectDropdownByValue(daySelect, day);
+			selectDropdownByText(monthSelect, month);
+			selectDropdownByValue(yearSelect, year);
+
+			// Check newsletter and offers
+			clickElement(newsLetter);
+			clickElement(optinChkbox);
+
+			System.out.println("✅ Basic account info filled successfully");
+		} catch (Exception e) {
+			System.err.println("❌ Error filling basic account info: " + e.getMessage());
+			throw e;
+		}
 	}
-	
-	public void continueButton() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.visibilityOf(continueBtn));
-		continueBtn.click();
+
+	/**
+	 * Fill address information
+	 */
+	public void fillAddressInfo(String firstName, String lastName, String company,
+								String address1, String address2, String country,
+								String state, String city, String zip, String mobile) {
+		try {
+			sendKeysToElement(userFname, firstName);
+			sendKeysToElement(userLname, lastName);
+			sendKeysToElement(companyName, company);
+			sendKeysToElement(addressOne, address1);
+			sendKeysToElement(addressTwo, address2);
+
+			selectDropdownByText(countrySelect, country);
+
+			sendKeysToElement(stateName, state);
+			sendKeysToElement(cityName, city);
+			sendKeysToElement(zipNumber, zip);
+			sendKeysToElement(mobNumber, mobile);
+
+			System.out.println("✅ Address info filled successfully");
+		} catch (Exception e) {
+			System.err.println("❌ Error filling address info: " + e.getMessage());
+			throw e;
+		}
+	}
+
+	/**
+	 * Complete registration process
+	 */
+	public void completeRegistration(String pwd, String firstName, String lastName,
+									 String company, String address1, String address2,
+									 String state, String city, String zip, String mobile) {
+		fillBasicAccountInfo(pwd, "2", "May", "2000", "male");
+		fillAddressInfo(firstName, lastName, company, address1, address2,
+				"United States", state, city, zip, mobile);
+		clickElement(createBtn);
+		System.out.println("✅ Registration completed successfully");
+	}
+
+	/**
+	 * Click continue button after successful registration
+	 */
+	public void clickContinue() {
+		try {
+			clickElement(continueBtn);
+			System.out.println("✅ Continue button clicked");
+		} catch (Exception e) {
+			System.err.println("❌ Error clicking continue button: " + e.getMessage());
+			throw e;
+		}
+	}
+
+	// ===== Validation Methods =====
+
+	/**
+	 * Check if account was created successfully
+	 */
+	public boolean isAccountCreated() {
+		return isElementDisplayed(accountCreatedMsg);
+	}
+
+	/**
+	 * Check if email already exists error is displayed
+	 */
+	public boolean isEmailExistsErrorDisplayed() {
+		return isElementDisplayed(emailExistsMsg);
+	}
+
+	/**
+	 * Get account created message text
+	 */
+	public String getAccountCreatedMessage() {
+		return getElementText(accountCreatedMsg);
+	}
+
+	/**
+	 * Get email exists error message text
+	 */
+	public String getEmailExistsMessage() {
+		return getElementText(emailExistsMsg);
+	}
+
+	/**
+	 * Check if we're on the account information page
+	 */
+	public boolean isOnAccountInfoPage() {
+		return isElementDisplayed(password);
+	}
+
+	// ===== Helper Methods =====
+
+	/**
+	 * Clear all form fields
+	 */
+	public void clearAllFields() {
+		try {
+			userName.clear();
+			userEmail.clear();
+			password.clear();
+			userFname.clear();
+			userLname.clear();
+			companyName.clear();
+			addressOne.clear();
+			addressTwo.clear();
+			stateName.clear();
+			cityName.clear();
+			zipNumber.clear();
+			mobNumber.clear();
+			System.out.println("✅ All fields cleared");
+		} catch (Exception e) {
+			System.err.println("❌ Error clearing fields: " + e.getMessage());
+		}
 	}
 }
