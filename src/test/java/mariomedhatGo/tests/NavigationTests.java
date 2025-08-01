@@ -25,7 +25,7 @@ public class NavigationTests extends BaseTest {
     }
 
     @Test(description = "Breadcrumb navigation", groups = {"regression", "navigation"})
-    public void testBreadcrumbNavigation() {
+    public void testBreadcrumbNavigation() throws InterruptedException {
         navigateToProducts();
 
         // Check if breadcrumbs exist (implementation depends on site structure)
@@ -54,7 +54,7 @@ public class NavigationTests extends BaseTest {
     }
 
     @Test(description = "Back button functionality", groups = {"regression", "navigation"})
-    public void testBackButtonFunctionality() {
+    public void testBackButtonFunctionality() throws InterruptedException {
         // Navigate to products
         navigateToProducts();
         String productsUrl = driver.getCurrentUrl();

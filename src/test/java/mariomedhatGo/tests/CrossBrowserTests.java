@@ -17,7 +17,7 @@ public class CrossBrowserTests extends BaseTest {
     }
 
     @Test(description = "Cross browser product test", groups = {"crossbrowser"})
-    public void testCrossBrowserProduct() {
+    public void testCrossBrowserProduct() throws InterruptedException {
         navigateToProducts();
 
         Assert.assertTrue(productPage.isOnProductsPage(), "Products page failed in this browser");

@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 public class PerformanceTests extends BaseTest {
 
     @Test(description = "Page load time test", groups = {"performance"})
-    public void testPageLoadTime() {
+    public void testPageLoadTime() throws InterruptedException {
         long startTime = System.currentTimeMillis();
 
         navigateToProducts();
@@ -22,7 +22,7 @@ public class PerformanceTests extends BaseTest {
     }
 
     @Test(description = "Multiple rapid clicks test", groups = {"performance"})
-    public void testMultipleRapidClicks() {
+    public void testMultipleRapidClicks() throws InterruptedException {
         navigateToProducts();
 
         // Rapidly click search button multiple times
@@ -42,7 +42,7 @@ public class PerformanceTests extends BaseTest {
     }
 
     @Test(description = "Memory leak test with multiple operations", groups = {"performance"})
-    public void testMemoryLeakPrevention() {
+    public void testMemoryLeakPrevention() throws InterruptedException {
         // Perform multiple operations that might cause memory leaks
         for (int i = 0; i < 3; i++) {
             navigateToProducts();

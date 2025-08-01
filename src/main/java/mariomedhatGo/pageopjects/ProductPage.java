@@ -1,5 +1,6 @@
 package mariomedhatGo.pageopjects;
 
+import java.time.Duration;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,29 +8,30 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class ProductPage extends BasePage {
 
 	// Constructor
 	public ProductPage(WebDriver driver) {
-		super(driver); // Call BasePage constructor
+		super(driver);
 		PageFactory.initElements(driver, this);
 	}
 
 	// ===== Page Elements =====
-
-	// Product-related locators
 	private By products = By.cssSelector("div.single-products");
 	private By productName = By.tagName("p");
-	private By addToCartBtn = By.cssSelector("a.add-to-cart");
-	private By viewCartBtn = By.xpath("//u[normalize-space()='View Cart']");
-	private By continueShoppingBtn = By.xpath("//button[contains(text(),'Continue Shopping')]");
+	private By addToCartBtn = By.xpath("//div[@class='overlay-content']//a[@data-product-id='21']");
+
+	// إصلاح المشكلة: استخدام FindBy بدلاً من By
+	@FindBy(xpath = "//u[normalize-space()='View Cart']")
+	private WebElement viewCartBtn;
+
+	@FindBy(xpath = "//button[contains(text(),'Continue Shopping')]")
+	private WebElement continueShoppingBtn;
 
 	@FindBy(xpath = "//a[@class='btn btn-default check_out']")
 	private WebElement checkoutBtn;
-
-	@FindBy(xpath = "//a[@class='btn btn-default check_out']")
-	private WebElement placeOrderBtn;
 
 	@FindBy(css = "input#search_product")
 	private WebElement searchBox;
@@ -43,15 +45,17 @@ public class ProductPage extends BasePage {
 	@FindBy(xpath = "//h2[contains(text(),'Searched Products')]")
 	private WebElement searchResultsTitle;
 
-	// Cart-related elements
-	@FindBy(xpath = "//tr[@id='product-1']")
-	private WebElement firstCartItem;
+	@FindBy(xpath = "//a[normalize-space()='Proceed To Checkout']")
+	private WebElement proccedToCheckout;
 
 	@FindBy(css = "td.cart_quantity button")
 	private WebElement quantityInCart;
 
 	@FindBy(css = "td.cart_total p")
 	private WebElement itemTotalPrice;
+
+	@FindBy(xpath = "//a[normalize-space()='Place Order']")
+	private WebElement placeOrderBtn;
 
 	// ===== Page Actions =====
 
@@ -64,15 +68,26 @@ public class ProductPage extends BasePage {
 			boolean productFound = false;
 
 			for (WebElement product : allProducts) {
-				String name = product.findElement(productName).getText();
+				String name = product.findElement(productName).getText().trim();
 
-				if (name.equalsIgnoreCase(productWanted)) {
+				if (name.equalsIgnoreCase(productWanted.trim())) {
+					// Scroll to product first
+					scrollToElement(product);
+
 					// Hover over product to show Add to Cart button
 					Actions actions = new Actions(driver);
 					actions.moveToElement(product).perform();
 
-					// Click Add to Cart
+					// Wait a bit for hover effect
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+
+					// Find and click Add to Cart button
 					WebElement addBtn = product.findElement(addToCartBtn);
+					waitForElementToBeClickable(addBtn);
 					clickElement(addBtn);
 
 					productFound = true;
@@ -85,12 +100,20 @@ public class ProductPage extends BasePage {
 				throw new RuntimeException("Product not found: " + productWanted);
 			}
 
+			// إصلاح المشكلة الكبيرة هنا
+			// استخدام wait مناسب للـ modal أو overlay
+			wait.until(ExpectedConditions.or(
+					ExpectedConditions.elementToBeClickable(viewCartBtn),
+					ExpectedConditions.elementToBeClickable(continueShoppingBtn)
+			));
+
 			// Click View Cart
-			waitForElementToBeClickable(driver.findElement(viewCartBtn));
-			clickElement(driver.findElement(viewCartBtn));
+			clickElement(viewCartBtn);
+			System.out.println("➡️ Current URL after clicking view cart: " + driver.getCurrentUrl());
 
 		} catch (Exception e) {
 			System.err.println("❌ Error adding product to cart: " + e.getMessage());
+			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -106,11 +129,13 @@ public class ProductPage extends BasePage {
 				// If not the last product, continue shopping
 				if (i < productNames.length - 1) {
 					clickContinueShopping();
+					// Wait for page to reload
+					wait.until(ExpectedConditions.visibilityOfElementLocated(products));
 				}
 			}
 
 			// View cart after adding all products
-			clickElement(driver.findElement(viewCartBtn));
+			clickElement(viewCartBtn);
 			System.out.println("✅ Multiple products added to cart successfully");
 
 		} catch (Exception e) {
@@ -123,19 +148,41 @@ public class ProductPage extends BasePage {
 	 * Add single product without viewing cart
 	 */
 	private void addSingleProductToCart(String productName) {
-		List<WebElement> allProducts = driver.findElements(products);
+		try {
+			List<WebElement> allProducts = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(products));
 
-		for (WebElement product : allProducts) {
-			String name = product.findElement(this.productName).getText();
+			for (WebElement product : allProducts) {
+				String name = product.findElement(this.productName).getText().trim();
 
-			if (name.equalsIgnoreCase(productName)) {
-				Actions actions = new Actions(driver);
-				actions.moveToElement(product).perform();
+				if (name.equalsIgnoreCase(productName.trim())) {
+					scrollToElement(product);
 
-				WebElement addBtn = product.findElement(addToCartBtn);
-				clickElement(addBtn);
-				break;
+					Actions actions = new Actions(driver);
+					actions.moveToElement(product).perform();
+
+					// Wait for hover effect
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+
+					WebElement addBtn = product.findElement(By.xpath(".//a[contains(@class, 'add-to-cart')]"));
+					System.out.println("🎯 Found Add to Cart button for: " + productName);
+					waitForElementToBeClickable(addBtn);
+					System.out.println("🔍 Is displayed: " + addBtn.isDisplayed());
+					System.out.println("🔍 Is enabled: " + addBtn.isEnabled());
+					//clickElement(addBtn);
+					actions.moveToElement(addBtn).pause(Duration.ofMillis(500)).click().perform();
+
+
+					System.out.println("✅ Single product added: " + productName);
+					break;
+				}
 			}
+		} catch (Exception e) {
+			System.err.println("❌ Error adding single product: " + e.getMessage());
+			throw e;
 		}
 	}
 
@@ -144,10 +191,20 @@ public class ProductPage extends BasePage {
 	 */
 	public void clickContinueShopping() {
 		try {
-			clickElement(driver.findElement(continueShoppingBtn));
+			wait.until(ExpectedConditions.elementToBeClickable(continueShoppingBtn));
+			clickElement(continueShoppingBtn);
 			System.out.println("✅ Continue shopping clicked");
+
+			// Wait for the modal to disappear
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+
 		} catch (Exception e) {
 			System.err.println("❌ Error clicking continue shopping: " + e.getMessage());
+			throw e;
 		}
 	}
 
@@ -156,8 +213,16 @@ public class ProductPage extends BasePage {
 	 */
 	public void searchForProduct(String searchTerm) {
 		try {
+			waitForElementToBeVisible(searchBox);
 			sendKeysToElement(searchBox, searchTerm);
 			clickElement(searchBtn);
+
+			// Wait for search results to load
+			wait.until(ExpectedConditions.or(
+					ExpectedConditions.visibilityOf(searchResultsTitle),
+					ExpectedConditions.presenceOfElementLocated(products)
+			));
+
 			System.out.println("✅ Product search completed for: " + searchTerm);
 		} catch (Exception e) {
 			System.err.println("❌ Error searching for product: " + e.getMessage());
@@ -171,6 +236,7 @@ public class ProductPage extends BasePage {
 	public void proceedToCheckout() {
 		try {
 			scrollToElement(checkoutBtn);
+			waitForElementToBeClickable(checkoutBtn);
 			clickElement(checkoutBtn);
 			System.out.println("✅ Proceeded to checkout");
 		} catch (Exception e) {
@@ -199,14 +265,22 @@ public class ProductPage extends BasePage {
 	 * Check if we're on products page
 	 */
 	public boolean isOnProductsPage() {
-		return isElementDisplayed(allProductsTitle);
+		try {
+			return wait.until(ExpectedConditions.visibilityOf(allProductsTitle)).isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**
 	 * Check if search results are displayed
 	 */
 	public boolean areSearchResultsDisplayed() {
-		return isElementDisplayed(searchResultsTitle);
+		try {
+			return wait.until(ExpectedConditions.visibilityOf(searchResultsTitle)).isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**
@@ -214,7 +288,7 @@ public class ProductPage extends BasePage {
 	 */
 	public int getProductCount() {
 		try {
-			List<WebElement> productsList = driver.findElements(products);
+			List<WebElement> productsList = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(products));
 			return productsList.size();
 		} catch (Exception e) {
 			System.err.println("❌ Error getting product count: " + e.getMessage());
@@ -227,11 +301,11 @@ public class ProductPage extends BasePage {
 	 */
 	public boolean isProductDisplayed(String productName) {
 		try {
-			List<WebElement> allProducts = driver.findElements(products);
+			List<WebElement> allProducts = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(products));
 
 			for (WebElement product : allProducts) {
-				String name = product.findElement(this.productName).getText();
-				if (name.equalsIgnoreCase(productName)) {
+				String name = product.findElement(this.productName).getText().trim();
+				if (name.equalsIgnoreCase(productName.trim())) {
 					return true;
 				}
 			}
@@ -265,20 +339,62 @@ public class ProductPage extends BasePage {
 	 * Check if cart has items
 	 */
 	public boolean isCartNotEmpty() {
-		return isElementDisplayed(firstCartItem);
+		try {
+			// Wait longer for cart page to load completely
+			wait.until(ExpectedConditions.urlContains("view_cart"));
+
+			// Then check for checkout button
+			wait.until(ExpectedConditions.visibilityOf(proccedToCheckout));
+			System.out.println("DEBUG: 'Proceed To Checkout' button is visible. Cart is not empty.");
+			return true;
+
+		} catch (Exception e) {
+			System.err.println("❌ Error: Cart validation failed. Error: " + e.getMessage());
+
+			// تشيك إضافي للتأكد
+			try {
+				// Check if we're actually on cart page
+				if (!driver.getCurrentUrl().contains("view_cart")) {
+					System.err.println("❌ Not on cart page. Current URL: " + driver.getCurrentUrl());
+					return false;
+				}
+
+				// Check for any products in cart table
+				List<WebElement> cartItems = driver.findElements(By.cssSelector("table#cart_info_table tbody tr"));
+				boolean hasItems = cartItems.size() > 0;
+				System.out.println("DEBUG: Cart items count: " + cartItems.size());
+				return hasItems;
+
+			} catch (Exception ex) {
+				System.err.println("❌ Secondary cart check failed: " + ex.getMessage());
+				return false;
+			}
+		}
 	}
 
 	/**
 	 * Get quantity of first item in cart
 	 */
 	public String getCartItemQuantity() {
-		return getElementText(quantityInCart);
+		try {
+			waitForElementToBeVisible(quantityInCart);
+			return getElementText(quantityInCart);
+		} catch (Exception e) {
+			System.err.println("❌ Error getting cart quantity: " + e.getMessage());
+			return "0";
+		}
 	}
 
 	/**
 	 * Get total price of item in cart
 	 */
 	public String getCartItemTotalPrice() {
-		return getElementText(itemTotalPrice);
+		try {
+			waitForElementToBeVisible(itemTotalPrice);
+			return getElementText(itemTotalPrice);
+		} catch (Exception e) {
+			System.err.println("❌ Error getting cart total price: " + e.getMessage());
+			return "0";
+		}
 	}
 }

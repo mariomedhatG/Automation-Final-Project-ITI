@@ -38,7 +38,7 @@ public class OrderPayment extends BasePage {
 	@FindBy(xpath = "//a[@class='btn btn-primary']")
 	private WebElement continueBtn;
 
-	@FindBy(xpath = "//h2[contains(text(),'Order Placed!')]")
+	@FindBy(xpath = "//div[@class='col-sm-9 col-sm-offset-1']//p[text()='Congratulations! Your order has been confirmed!']")
 	private WebElement orderSuccessMsg;
 
 	@FindBy(xpath = "//p[contains(text(),'Your order has been placed')]")

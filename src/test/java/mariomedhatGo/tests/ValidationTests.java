@@ -21,7 +21,7 @@ public class ValidationTests extends BaseTest {
     }
 
     @Test(description = "Payment form validation", groups = {"regression", "validation"})
-    public void testPaymentFormValidation() {
+    public void testPaymentFormValidation() throws InterruptedException {
         // Setup cart first
         setupBasicUserAndCart();
 
@@ -63,7 +63,7 @@ public class ValidationTests extends BaseTest {
     }
 
     // Helper method
-    private void setupBasicUserAndCart() {
+    private void setupBasicUserAndCart() throws InterruptedException {
         navigateToSignup();
         regPage.enterSignupInfo("Validation Tester", email);
         regPage.completeRegistration("password123", "Validation", "Tester", "TestCorp",

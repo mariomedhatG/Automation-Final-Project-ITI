@@ -8,7 +8,7 @@ public class SearchTests extends BaseTest {
 
     @Test(description = "Product search with various keywords", groups = {"regression", "search"},
             dataProvider = "searchData", dataProviderClass = TestDataProviders.class)
-    public void testProductSearch(String searchTerm) {
+    public void testProductSearch(String searchTerm) throws InterruptedException {
         navigateToProducts();
         productPage.searchForProduct(searchTerm);
 
@@ -20,7 +20,7 @@ public class SearchTests extends BaseTest {
     }
 
     @Test(description = "Search with empty string", groups = {"regression", "search"})
-    public void testEmptySearch() {
+    public void testEmptySearch() throws InterruptedException {
         navigateToProducts();
         productPage.searchForProduct("");
 
@@ -32,7 +32,7 @@ public class SearchTests extends BaseTest {
     }
 
     @Test(description = "Search with special characters", groups = {"regression", "search"})
-    public void testSpecialCharacterSearch() {
+    public void testSpecialCharacterSearch() throws InterruptedException {
         navigateToProducts();
         productPage.searchForProduct("@#$%");
 
@@ -43,7 +43,7 @@ public class SearchTests extends BaseTest {
     }
 
     @Test(description = "Case insensitive search", groups = {"regression", "search"})
-    public void testCaseInsensitiveSearch() {
+    public void testCaseInsensitiveSearch() throws InterruptedException {
         navigateToProducts();
 
         // Search with lowercase

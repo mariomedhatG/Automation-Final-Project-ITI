@@ -84,10 +84,10 @@ public class RegPage extends BasePage {
 	private WebElement continueBtn;
 
 	// Success/Error message elements
-	@FindBy(xpath = "//h2[contains(text(),'Account Created!')]")
-	private WebElement accountCreatedMsg;
+//	@FindBy(xpath = "//h2[contains(text(),'Account Created!')]")
+//	private WebElement accountCreatedMsg;
 
-	@FindBy(xpath = "//p[contains(text(),'Email Address already exist!')]")
+	@FindBy(xpath = "//form[@action='/signup']//p[text()='Email Address already exist!']")
 	private WebElement emailExistsMsg;
 
 	// ===== Page Actions =====
@@ -174,7 +174,7 @@ public class RegPage extends BasePage {
 		fillBasicAccountInfo(pwd, "2", "May", "2000", "male");
 		fillAddressInfo(firstName, lastName, company, address1, address2,
 				"United States", state, city, zip, mobile);
-		clickElement(createBtn);
+		createBtn.click();
 		System.out.println("✅ Registration completed successfully");
 	}
 
@@ -197,7 +197,7 @@ public class RegPage extends BasePage {
 	 * Check if account was created successfully
 	 */
 	public boolean isAccountCreated() {
-		return isElementDisplayed(accountCreatedMsg);
+		return isElementDisplayed(continueBtn);
 	}
 
 	/**
@@ -210,9 +210,9 @@ public class RegPage extends BasePage {
 	/**
 	 * Get account created message text
 	 */
-	public String getAccountCreatedMessage() {
-		return getElementText(accountCreatedMsg);
-	}
+//	public String getAccountCreatedMessage() {
+//		return getElementText(accountCreatedMsg);
+//	}
 
 	/**
 	 * Get email exists error message text

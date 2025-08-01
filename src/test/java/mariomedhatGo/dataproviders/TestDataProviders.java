@@ -48,6 +48,27 @@ public class TestDataProviders {
         };
     }
 
+    @DataProvider(name = "multipleProductsData")
+    public Object[][] getMultipleProductsData() {
+        return new Object[][] {
+                { new String[] {
+                        "Blue Cotton Indie Mickey Dress",
+                        "Men Tshirt",
+                        "Sleeveless Dress"
+                }},
+                { new String[] {
+                        "Stylish Dress",
+                        "Winter Top",
+                        "Summer White Top"
+                }},
+                { new String[] {
+                        "Madame Top For Women",
+                        "Fancy Green Top"
+                }}
+        };
+    }
+
+
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
         return new Object[][] {

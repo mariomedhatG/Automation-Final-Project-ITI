@@ -7,7 +7,7 @@ import mariomedhatGo.dataproviders.TestDataProviders;
 public class ProductTests extends BaseTest {
 
     @Test(description = "Add single product to cart", groups = {"smoke", "products"})
-    public void testAddSingleProductToCart() {
+    public void testAddSingleProductToCart() throws InterruptedException {
         // Register user first
         navigateToSignup();
         regPage.enterSignupInfo("Product Tester", email);
@@ -26,20 +26,26 @@ public class ProductTests extends BaseTest {
 
     @Test(description = "Add multiple products to cart", groups = {"regression"},
             dataProvider = "productData", dataProviderClass = TestDataProviders.class)
-    public void testAddMultipleProductsToCart(String productName) {
+    public void testAddMultipleProductsToCart(String[] productNames) throws InterruptedException {
+    try {
         navigateToProducts();
 
-        if (productPage.isProductDisplayed(productName)) {
-            productPage.addProductToCart(productName);
-            Assert.assertTrue(productPage.isCartNotEmpty(), "Product not added: " + productName);
-            System.out.println("✅ Added product: " + productName);
-        } else {
-            System.out.println("⚠️ Product not found: " + productName);
-        }
+        // Add product to cart
+        productPage.addMultipleProductsToCart(productNames);
+
+        // Verify product added
+        Assert.assertTrue(productPage.isCartNotEmpty(), "Cart is empty after adding: ");
+
+        System.out.println("✅ TC03: Product added successfully: ");
+
+    } catch (Exception e) {
+        System.err.println("❌ TC03 failed for product " + ": " + e.getMessage());
+        throw e;
+    }
     }
 
     @Test(description = "Product search functionality", groups = {"regression"})
-    public void testProductSearch() {
+    public void testProductSearch() throws InterruptedException {
         navigateToProducts();
         productPage.searchForProduct("dress");
 
@@ -49,7 +55,7 @@ public class ProductTests extends BaseTest {
     }
 
     @Test(description = "Verify all products page", groups = {"smoke"})
-    public void testVerifyAllProductsPage() {
+    public void testVerifyAllProductsPage() throws InterruptedException {
         navigateToProducts();
 
         Assert.assertTrue(productPage.isOnProductsPage(), "Not on products page");

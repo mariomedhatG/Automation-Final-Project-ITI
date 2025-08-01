@@ -3,15 +3,20 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="tests.AutomationTestCases">
+      <class name="mariomedhatGo.tests.AutomationTestCases">
         <methods>
-          <include name="setup"/>
-          <include name="TC07_LeaveMandatoryFieldsBlank"/>
-          <include name="TC08_InvalidCardData"/>
-          <include name="TC06_RegisterWithExistingEmail"/>
+          <include name="TC13_SlowConnectionHandling"/>
+          <include name="TC01_RegisterUserSuccessfully"/>
+          <include name="TC04_AddSingleProductToCart"/>
+          <include name="TC10_GuestCheckout"/>
+          <include name="TC05_AddMultipleProductsToCart" invocation-numbers="3 4 6 7 8 9"/>
+          <include name="TC02_RegisterWithExistingEmail"/>
           <include name="tearDown"/>
+          <include name="TC09_CheckoutWithInvalidPayment" invocation-numbers="0 2 3 4 5 6 7"/>
+          <include name="setup"/>
+          <include name="TC08_SuccessfulCheckout" invocation-numbers="0 1 2 3 4"/>
         </methods>
-      </class> <!-- tests.AutomationTestCases -->
+      </class> <!-- mariomedhatGo.tests.AutomationTestCases -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

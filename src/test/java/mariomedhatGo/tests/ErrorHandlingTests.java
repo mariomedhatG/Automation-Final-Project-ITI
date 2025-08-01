@@ -47,7 +47,7 @@ public class ErrorHandlingTests extends BaseTest {
     }
 
     @Test(description = "Browser refresh handling", groups = {"error", "regression"})
-    public void testBrowserRefreshHandling() {
+    public void testBrowserRefreshHandling() throws InterruptedException {
         navigateToProducts();
 
         // Refresh the page

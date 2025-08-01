@@ -9,7 +9,7 @@ public class CheckoutTests extends BaseTest {
     @Test(description = "Successful checkout process", groups = {"smoke", "checkout"},
             dataProvider = "paymentData", dataProviderClass = TestDataProviders.class)
     public void testSuccessfulCheckout(String cardName, String cardNumber, String cvc,
-                                       String month, String year) {
+                                       String month, String year) throws InterruptedException {
         // Register and add product
         setupUserAndProduct();
 
@@ -28,7 +28,7 @@ public class CheckoutTests extends BaseTest {
     @Test(description = "Checkout with invalid payment data", groups = {"regression"},
             dataProvider = "invalidPaymentData", dataProviderClass = TestDataProviders.class)
     public void testCheckoutWithInvalidPayment(String cardName, String cardNumber, String cvc,
-                                               String month, String year) {
+                                               String month, String year) throws InterruptedException {
         // Register and add product
         setupUserAndProduct();
 
@@ -49,7 +49,7 @@ public class CheckoutTests extends BaseTest {
     }
 
     @Test(description = "Guest checkout functionality", groups = {"regression"})
-    public void testGuestCheckout() {
+    public void testGuestCheckout() throws InterruptedException {
         // Don't register, just add product as guest
         navigateToProducts();
         productPage.addProductToCart("Blue Cotton Indie Mickey Dress");
@@ -61,7 +61,7 @@ public class CheckoutTests extends BaseTest {
     }
 
     // Helper method for common setup
-    private void setupUserAndProduct() {
+    private void setupUserAndProduct() throws InterruptedException {
         navigateToSignup();
         regPage.enterSignupInfo("Checkout Tester", email);
         regPage.completeRegistration("password123", "Checkout", "Tester", "TestCorp",

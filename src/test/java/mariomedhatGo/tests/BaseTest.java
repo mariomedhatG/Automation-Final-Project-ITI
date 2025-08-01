@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
@@ -23,6 +24,7 @@ import mariomedhatGo.pageopjects.RegPage;
 public class BaseTest {
 
     protected WebDriver driver;
+    protected WebDriverWait wait;
     protected RegPage regPage;
     protected ProductPage productPage;
     protected OrderPayment orderPayment;
@@ -67,8 +69,20 @@ public class BaseTest {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
+
+                // إضافة المزيد من الخيارات لاستقرار أفضل
                 chromeOptions.addArguments("--disable-notifications");
                 chromeOptions.addArguments("--disable-popup-blocking");
+                chromeOptions.addArguments("--disable-features=AutofillAddressProfile");
+                chromeOptions.addArguments("--disable-features=PasswordAutosave,AutoFill,CredentialsManagement");
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--disable-gpu");
+                chromeOptions.addArguments("--remote-allow-origins=*");
+                chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+                chromeOptions.setExperimentalOption("useAutomationExtension", false);
+
                 driver = new ChromeDriver(chromeOptions);
                 break;
 
@@ -89,12 +103,30 @@ public class BaseTest {
 
     private void setupBrowser() {
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+
+        // إصلاح الـ timeouts - زيادة الوقت للاستقرار
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
+        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
+
+        // إضافة WebDriverWait
+        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     private void navigateToApplication() {
-        driver.get(baseUrl);
+        try {
+            driver.get(baseUrl);
+
+            // التأكد من تحميل الصفحة
+            wait.until(webDriver -> ((org.openqa.selenium.JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState").equals("complete"));
+
+            System.out.println("✅ Application loaded successfully: " + baseUrl);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error navigating to application: " + e.getMessage());
+            throw e;
+        }
     }
 
     private void initializePageObjects() {
@@ -105,22 +137,78 @@ public class BaseTest {
 
     private void generateTestData() {
         email = "mario" + System.currentTimeMillis() + "@gmail.com";
+        System.out.println(" Generated test email: " + email);
     }
 
-    // Common helper methods for tests
+    // إصلاح Common helper methods for tests
     protected void navigateToSignup() {
-        driver.get(baseUrl + "login");
+        try {
+            String signupUrl = baseUrl + "login";
+            driver.get(signupUrl);
+
+            // Wait for page to load completely
+            wait.until(webDriver -> ((org.openqa.selenium.JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState").equals("complete"));
+
+            System.out.println("✅ Navigated to signup page: " + signupUrl);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error navigating to signup: " + e.getMessage());
+            throw e;
+        }
     }
 
-    protected void navigateToProducts() {
-        driver.get(baseUrl + "products");
+    protected void navigateToProducts() throws InterruptedException {
+        try {
+            String productsUrl = baseUrl + "products";
+            driver.get(productsUrl);
+
+            // Wait for page to load completely
+            wait.until(webDriver -> ((org.openqa.selenium.JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState").equals("complete"));
+
+            // Additional wait for products to load
+            Thread.sleep(2000);
+
+            System.out.println("✅ Navigated to products page: " + productsUrl);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error navigating to products: " + e.getMessage());
+            throw e;
+        }
     }
 
     protected void waitFor(int seconds) {
         try {
-            Thread.sleep(seconds * 1000);
+            Thread.sleep(seconds * 1000L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            System.err.println("⚠️ Wait interrupted: " + e.getMessage());
+        }
+    }
+
+    // إضافة method مفيدة للـ debugging
+    protected void logCurrentState() {
+        try {
+            System.out.println("🔍 Current URL: " + driver.getCurrentUrl());
+            System.out.println("🔍 Page Title: " + driver.getTitle());
+            System.out.println("🔍 Window Handle: " + driver.getWindowHandle());
+        } catch (Exception e) {
+            System.err.println("❌ Error logging current state: " + e.getMessage());
+        }
+    }
+
+    // إضافة method للتعامل مع الـ alerts إذا ظهرت
+    protected void handleAlertIfPresent() {
+        try {
+            org.openqa.selenium.Alert alert = wait.until(
+                    org.openqa.selenium.support.ui.ExpectedConditions.alertIsPresent()
+            );
+            String alertText = alert.getText();
+            System.out.println("⚠️ Alert detected: " + alertText);
+            alert.accept();
+        } catch (Exception e) {
+            // No alert present, continue
         }
     }
 
@@ -128,10 +216,26 @@ public class BaseTest {
     public void tearDown() {
         if (driver != null) {
             try {
+                // Log final state for debugging
+                System.out.println("🏁 Test completed. Final URL: " + driver.getCurrentUrl());
+
+                // Handle any remaining alerts
+                handleAlertIfPresent();
+
                 driver.quit();
                 System.out.println("✅ Browser closed successfully");
+
             } catch (Exception e) {
-                System.err.println("❌ Error closing browser: " + e.getMessage());
+                System.err.println("❌ Error during teardown: " + e.getMessage());
+
+                // Force close if normal quit fails
+                try {
+                    if (driver != null) {
+                        driver.quit();
+                    }
+                } catch (Exception ex) {
+                    System.err.println("❌ Force close also failed: " + ex.getMessage());
+                }
             }
         }
     }
