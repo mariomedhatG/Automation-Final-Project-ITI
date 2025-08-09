@@ -100,8 +100,6 @@ public class ProductPage extends BasePage {
 				throw new RuntimeException("Product not found: " + productWanted);
 			}
 
-			// إصلاح المشكلة الكبيرة هنا
-			// استخدام wait مناسب للـ modal أو overlay
 			wait.until(ExpectedConditions.or(
 					ExpectedConditions.elementToBeClickable(viewCartBtn),
 					ExpectedConditions.elementToBeClickable(continueShoppingBtn)
@@ -122,26 +120,35 @@ public class ProductPage extends BasePage {
 	 * Add multiple products to cart
 	 */
 	public void addMultipleProductsToCart(String[] productNames) {
-		try {
-			for (int i = 0; i < productNames.length; i++) {
-				addSingleProductToCart(productNames[i]);
+        try {
+            for (int i = 0; i < productNames.length; i++) {
+                String currentProduct = productNames[i];
+                System.out.println("Adding product " + (i + 1) + "/" + productNames.length + ": " + currentProduct);
 
-				// If not the last product, continue shopping
-				if (i < productNames.length - 1) {
-					clickContinueShopping();
-					// Wait for page to reload
-					wait.until(ExpectedConditions.visibilityOfElementLocated(products));
-				}
-			}
+                addSingleProductToCart(currentProduct);
 
-			// View cart after adding all products
-			clickElement(viewCartBtn);
-			System.out.println("✅ Multiple products added to cart successfully");
+                // Check if this is the last product
+                boolean isLastProduct = (i == productNames.length - 1);
 
-		} catch (Exception e) {
-			System.err.println("❌ Error adding multiple products: " + e.getMessage());
-			throw e;
-		}
+                if (isLastProduct) {
+                    // Last product - go to cart
+                    clickElement(viewCartBtn);
+                    System.out.println("Added last product, viewing cart");
+                    break; // Exit the loop
+                } else {
+                    // Not last product - continue shopping
+                    clickContinueShopping();
+                    wait.until(ExpectedConditions.visibilityOfElementLocated(products));
+                    System.out.println("Continuing shopping after adding: " + currentProduct);
+                }
+            }
+
+            System.out.println("All " + productNames.length + " products added successfully");
+
+        } catch (Exception e) {
+            System.err.println("Error adding multiple products: " + e.getMessage());
+            throw e;
+        }
 	}
 
 	/**

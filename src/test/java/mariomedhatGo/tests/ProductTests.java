@@ -21,11 +21,11 @@ public class ProductTests extends BaseTest {
 
         Assert.assertTrue(driver.getCurrentUrl().contains("view_cart"), "Not on cart page");
         Assert.assertTrue(productPage.isCartNotEmpty(), "Cart is empty");
-        System.out.println("✅ Add single product test passed");
+        System.out.println("Add single product test passed");
     }
 
     @Test(description = "Add multiple products to cart", groups = {"regression"},
-            dataProvider = "productData", dataProviderClass = TestDataProviders.class)
+            dataProvider = "getMultipleProductsData", dataProviderClass = TestDataProviders.class)
     public void testAddMultipleProductsToCart(String[] productNames) throws InterruptedException {
     try {
         navigateToProducts();
@@ -36,10 +36,10 @@ public class ProductTests extends BaseTest {
         // Verify product added
         Assert.assertTrue(productPage.isCartNotEmpty(), "Cart is empty after adding: ");
 
-        System.out.println("✅ TC03: Product added successfully: ");
+        System.out.println("TC03: Product added successfully: ");
 
     } catch (Exception e) {
-        System.err.println("❌ TC03 failed for product " + ": " + e.getMessage());
+        System.err.println("TC03 failed for product " + ": " + e.getMessage());
         throw e;
     }
     }
@@ -51,7 +51,7 @@ public class ProductTests extends BaseTest {
 
         Assert.assertTrue(productPage.areSearchResultsDisplayed(), "Search results not displayed");
         Assert.assertTrue(productPage.getProductCount() > 0, "No search results found");
-        System.out.println("✅ Product search test passed");
+        System.out.println("Product search test passed");
     }
 
     @Test(description = "Verify all products page", groups = {"smoke"})
@@ -63,6 +63,6 @@ public class ProductTests extends BaseTest {
 
         String[] allProducts = productPage.getAllProductNames();
         Assert.assertTrue(allProducts.length > 0, "Product names not retrieved");
-        System.out.println("✅ Products page verification passed - Found " + allProducts.length + " products");
+        System.out.println("Products page verification passed - Found " + allProducts.length + " products");
     }
 }

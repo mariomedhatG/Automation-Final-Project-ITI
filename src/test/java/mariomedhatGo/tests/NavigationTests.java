@@ -12,16 +12,17 @@ public class NavigationTests extends BaseTest {
         driver.findElement(By.linkText("Home")).click();
         Assert.assertTrue(driver.getCurrentUrl().equals(baseUrl) || driver.getCurrentUrl().equals(baseUrl + "/"),
                 "Home navigation failed");
+        System.out.println("Home Page Verified");
 
         // Test Products navigation
-        driver.findElement(By.linkText("Products")).click();
-        Assert.assertTrue(driver.getCurrentUrl().contains("products"), "Products navigation failed");
+        driver.findElement(By.xpath("//a[@href='/products']")).click();
+        Assert.assertTrue(driver.getCurrentUrl().equals(baseUrl + "products"), "Products navigation failed");
 
         // Test Login navigation
-        driver.findElement(By.linkText("Signup / Login")).click();
-        Assert.assertTrue(driver.getCurrentUrl().contains("login"), "Login navigation failed");
+        driver.findElement(By.xpath("//a[@href='/login']")).click();
+        Assert.assertTrue(driver.getCurrentUrl().equals(baseUrl + "login"), "Login navigation failed");
 
-        System.out.println("✅ Main menu navigation tests passed");
+        System.out.println("Main menu navigation tests passed");
     }
 
     @Test(description = "Breadcrumb navigation", groups = {"regression", "navigation"})
@@ -33,9 +34,9 @@ public class NavigationTests extends BaseTest {
                 !driver.findElements(By.cssSelector("nav[aria-label='breadcrumb']")).isEmpty();
 
         if (breadcrumbsExist) {
-            System.out.println("✅ Breadcrumbs found and working");
+            System.out.println("Breadcrumbs found and working");
         } else {
-            System.out.println("ℹ️ No breadcrumbs found on this page");
+            System.out.println("No breadcrumbs found on this page");
         }
 
         Assert.assertTrue(true, "Breadcrumb navigation test completed");
@@ -50,7 +51,7 @@ public class NavigationTests extends BaseTest {
         boolean footerExists = !driver.findElements(By.tagName("footer")).isEmpty();
         Assert.assertTrue(footerExists, "Footer not found");
 
-        System.out.println("✅ Footer navigation test passed");
+        System.out.println("Footer navigation test passed");
     }
 
     @Test(description = "Back button functionality", groups = {"regression", "navigation"})
@@ -71,6 +72,6 @@ public class NavigationTests extends BaseTest {
                         driver.getCurrentUrl().equals(productsUrl),
                 "Back button navigation failed");
 
-        System.out.println("✅ Back button functionality test passed");
+        System.out.println("Back button functionality test passed");
     }
 }

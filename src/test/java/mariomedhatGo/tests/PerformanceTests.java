@@ -18,7 +18,7 @@ public class PerformanceTests extends BaseTest {
         // Assert page loads within 10 seconds
         Assert.assertTrue(loadTime < 10000, "Page load time too slow: " + loadTime + "ms");
 
-        System.out.println("✅ Page loaded in " + loadTime + "ms");
+        System.out.println("Page loaded in " + loadTime + "ms");
     }
 
     @Test(description = "Multiple rapid clicks test", groups = {"performance"})
@@ -38,7 +38,7 @@ public class PerformanceTests extends BaseTest {
         // Should still be on products page without errors
         Assert.assertTrue(driver.getCurrentUrl().contains("products"), "Rapid clicks caused navigation issues");
 
-        System.out.println("✅ Multiple rapid clicks test passed");
+        System.out.println("Multiple rapid clicks test passed");
     }
 
     @Test(description = "Memory leak test with multiple operations", groups = {"performance"})
@@ -56,6 +56,6 @@ public class PerformanceTests extends BaseTest {
                         driver.getCurrentUrl().contains("login"),
                 "Multiple operations caused browser issues");
 
-        System.out.println("✅ Memory leak prevention test passed");
+        System.out.println("Memory leak prevention test passed");
     }
 }

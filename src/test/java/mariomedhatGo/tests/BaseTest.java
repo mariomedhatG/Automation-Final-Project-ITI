@@ -69,8 +69,6 @@ public class BaseTest {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
-
-                // إضافة المزيد من الخيارات لاستقرار أفضل
                 chromeOptions.addArguments("--disable-notifications");
                 chromeOptions.addArguments("--disable-popup-blocking");
                 chromeOptions.addArguments("--disable-features=AutofillAddressProfile");
@@ -103,8 +101,6 @@ public class BaseTest {
 
     private void setupBrowser() {
         driver.manage().window().maximize();
-
-        // إصلاح الـ timeouts - زيادة الوقت للاستقرار
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
         driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
@@ -117,7 +113,6 @@ public class BaseTest {
         try {
             driver.get(baseUrl);
 
-            // التأكد من تحميل الصفحة
             wait.until(webDriver -> ((org.openqa.selenium.JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState").equals("complete"));
 
@@ -170,10 +165,10 @@ public class BaseTest {
             // Additional wait for products to load
             Thread.sleep(2000);
 
-            System.out.println("✅ Navigated to products page: " + productsUrl);
+            System.out.println("Navigated to products page: " + productsUrl);
 
         } catch (Exception e) {
-            System.err.println("❌ Error navigating to products: " + e.getMessage());
+            System.err.println("Error navigating to products: " + e.getMessage());
             throw e;
         }
     }
@@ -183,22 +178,20 @@ public class BaseTest {
             Thread.sleep(seconds * 1000L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("⚠️ Wait interrupted: " + e.getMessage());
+            System.err.println("Wait interrupted: " + e.getMessage());
         }
     }
 
-    // إضافة method مفيدة للـ debugging
     protected void logCurrentState() {
         try {
-            System.out.println("🔍 Current URL: " + driver.getCurrentUrl());
-            System.out.println("🔍 Page Title: " + driver.getTitle());
-            System.out.println("🔍 Window Handle: " + driver.getWindowHandle());
+            System.out.println("Current URL: " + driver.getCurrentUrl());
+            System.out.println("Page Title: " + driver.getTitle());
+            System.out.println("Window Handle: " + driver.getWindowHandle());
         } catch (Exception e) {
             System.err.println("❌ Error logging current state: " + e.getMessage());
         }
     }
 
-    // إضافة method للتعامل مع الـ alerts إذا ظهرت
     protected void handleAlertIfPresent() {
         try {
             org.openqa.selenium.Alert alert = wait.until(
@@ -223,10 +216,10 @@ public class BaseTest {
                 handleAlertIfPresent();
 
                 driver.quit();
-                System.out.println("✅ Browser closed successfully");
+                System.out.println("Browser closed successfully");
 
             } catch (Exception e) {
-                System.err.println("❌ Error during teardown: " + e.getMessage());
+                System.err.println("Error during teardown: " + e.getMessage());
 
                 // Force close if normal quit fails
                 try {
@@ -234,7 +227,7 @@ public class BaseTest {
                         driver.quit();
                     }
                 } catch (Exception ex) {
-                    System.err.println("❌ Force close also failed: " + ex.getMessage());
+                    System.err.println("Force close also failed: " + ex.getMessage());
                 }
             }
         }

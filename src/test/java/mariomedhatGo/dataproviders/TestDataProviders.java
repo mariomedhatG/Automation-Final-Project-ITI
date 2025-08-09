@@ -22,6 +22,40 @@ public class TestDataProviders {
         };
     }
 
+    @DataProvider(name = "registrationInvalidData")
+    public Object[][] getRegistrationInvalidData() {
+        return new Object[][] {
+                {new String[] {"ahmed456", "123456", "Ali", "DevCorp",
+                        "456 Oak Ave", "Suite 200", "Texas", "Austin", "73301", "9876543210"}},
+                {new String[] {"sara789", "Sara", "Mohamed", "TestCorp",
+                        "789 Pine Rd", "Floor 3", "123456", "Albany", "12084", "5555551234"}},
+                {new String[] {"john123", "John", "Smith", "SmithCorp",
+                        "321 Elm St", "Unit 5", "Florida", "123456", "33101", "3051234567"}},
+                {new String[] {"lisa456", "Lisa", "Johnson", "JohnsonInc",
+                        "654 Maple Ave", "Floor 2", "Illinois", "Chicago", "mhdjdjdj", "3122345678"}},
+                {new String[] {"david789", "David", "Wilson", "WilsonLLC",
+                        "987 Oak Rd", "Suite 10", "Nevada", "Las Vegas", "89101", "socosdocsk"}}
+        };
+    }
+
+    @DataProvider(name = "registrationDataBlankFields")
+    public Object[][] getRegistrationDataWithBlankFields() {
+        return new Object[][] {
+                {new String[] {"", "Mario", "Medhat", "TechCorp",
+                        "123 Main St", "Apt 4B", "California", "Los Angeles", "90210", "1234567890"}},
+                {new String[] {"ahmed456", "", "Ali", "DevCorp",
+                        "456 Oak Ave", "Suite 200", "Texas", "Austin", "73301", "9876543210"}},
+                {new String[] {"sara789", "Sara", "Mohamed", "TestCorp",
+                        "789 Pine Rd", "Floor 3", "", "Albany", "12084", "5555551234"}},
+                {new String[] {"john123", "John", "Smith", "SmithCorp",
+                        "321 Elm St", "Unit 5", "Florida", "", "33101", "3051234567"}},
+                {new String[] {"lisa456", "Lisa", "Johnson", "JohnsonInc",
+                        "654 Maple Ave", "Floor 2", "Illinois", "Chicago", "", "3122345678"}},
+                {new String[] {"david789", "David", "Wilson", "WilsonLLC",
+                        "987 Oak Rd", "Suite 10", "Nevada", "Las Vegas", "89101", ""}}
+        };
+    }
+
     @DataProvider(name = "loginData")
     public Object[][] getLoginData() {
         return new Object[][] {
@@ -55,15 +89,6 @@ public class TestDataProviders {
                         "Blue Cotton Indie Mickey Dress",
                         "Men Tshirt",
                         "Sleeveless Dress"
-                }},
-                { new String[] {
-                        "Stylish Dress",
-                        "Winter Top",
-                        "Summer White Top"
-                }},
-                { new String[] {
-                        "Madame Top For Women",
-                        "Fancy Green Top"
                 }}
         };
     }
@@ -92,6 +117,40 @@ public Object[][] getInvalidPaymentData() {
             {"Test Name", "4111111111111111", "abc", "12", "2025"}, // Non-numeric CVC
             {"Test Name", "4111111111111111", "123", "invalid", "2025"} // Invalid month format
     };
+}
+
+@DataProvider(name = "registAndPayment")
+public Object[][] getRegistAndPayment(){
+        Object[][] registData = {{"Mario Medhat", "mario1@test.com", "password123", "Mario", "Medhat", "TechCorp",
+                "123 Main St", "Apt 4B", "California", "Los Angeles", "90210", "1234567890"}
+        };
+
+        Object[][] paymentData = {
+                {"Mario Medhat", "4111111111111111", "123", "12", "2025"},
+        };
+
+    Object[][] combinedData = new Object[registData.length][17];
+    for (int i = 0; i < registData.length; i++) {
+        combinedData[0] = registData[0];
+        combinedData[1] = registData[1];
+        combinedData[2] = registData[2];
+        combinedData[3] = registData[3];
+        combinedData[4] = registData[4];
+        combinedData[5] = registData[5];
+        combinedData[6] = registData[6];
+        combinedData[7] = registData[7];
+        combinedData[8] = registData[8];
+        combinedData[9] = registData[9];
+        combinedData[10] = registData[10];
+        combinedData[11] = registData[11];
+        combinedData[12] = paymentData[0];
+        combinedData[13] = paymentData[1];
+        combinedData[14] = paymentData[2];
+        combinedData[15] = paymentData[3];
+        combinedData[17] = paymentData[4];
+    }
+
+    return combinedData;
 }
 
 // New data providers for additional test scenarios

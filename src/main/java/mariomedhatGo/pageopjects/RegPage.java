@@ -100,9 +100,9 @@ public class RegPage extends BasePage {
 			sendKeysToElement(userName, name);
 			sendKeysToElement(userEmail, email);
 			clickElement(regBtn);
-			System.out.println("✅ Signup info entered successfully");
+			System.out.println("Signup info entered successfully");
 		} catch (Exception e) {
-			System.err.println("❌ Error entering signup info: " + e.getMessage());
+			System.err.println("Error entering signup info: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -158,9 +158,9 @@ public class RegPage extends BasePage {
 			sendKeysToElement(zipNumber, zip);
 			sendKeysToElement(mobNumber, mobile);
 
-			System.out.println("✅ Address info filled successfully");
+			System.out.println("Address info filled successfully");
 		} catch (Exception e) {
-			System.err.println("❌ Error filling address info: " + e.getMessage());
+			System.err.println("Error filling address info: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -168,15 +168,58 @@ public class RegPage extends BasePage {
 	/**
 	 * Complete registration process
 	 */
-	public void completeRegistration(String pwd, String firstName, String lastName,
-									 String company, String address1, String address2,
-									 String state, String city, String zip, String mobile) {
-		fillBasicAccountInfo(pwd, "2", "May", "2000", "male");
-		fillAddressInfo(firstName, lastName, company, address1, address2,
-				"United States", state, city, zip, mobile);
+	public void completeRegistration(String[] registData) {
+
+        password.sendKeys(registData[0]);
+        userFname.sendKeys(registData[1]);
+        userLname.sendKeys(registData[2]);
+        companyName.sendKeys(registData[3]);
+        addressOne.sendKeys(registData[4]);
+        addressTwo.sendKeys(registData[5]);
+        stateName.sendKeys(registData[6]);
+        cityName.sendKeys(registData[7]);
+        zipNumber.sendKeys(registData[8]);
+        mobNumber.sendKeys(registData[9]);
+
 		createBtn.click();
-		System.out.println("✅ Registration completed successfully");
+		System.out.println("Registration completed successfully");
 	}
+
+    public void completeRegistrationWithBlank (String[] blankData) {
+            // Enter Data
+            password.sendKeys(blankData[0]);
+            userFname.sendKeys(blankData[1]);
+            userLname.sendKeys(blankData[2]);
+            companyName.sendKeys(blankData[3]);
+            addressOne.sendKeys(blankData[4]);
+            addressTwo.sendKeys(blankData[5]);
+            stateName.sendKeys(blankData[6]);
+            cityName.sendKeys(blankData[7]);
+            zipNumber.sendKeys(blankData[8]);
+            mobNumber.sendKeys(blankData[9]);
+
+            // Try To Click Crate Button
+            createBtn.click();
+            System.out.println("Registration with Blank completed ");
+	}
+
+    public void completeRegistrationWithInvalidData(String[] invalidData){
+        // Enter Data
+        password.sendKeys(invalidData[0]);
+        userFname.sendKeys(invalidData[1]);
+        userLname.sendKeys(invalidData[2]);
+        companyName.sendKeys(invalidData[3]);
+        addressOne.sendKeys(invalidData[4]);
+        addressTwo.sendKeys(invalidData[5]);
+        stateName.sendKeys(invalidData[6]);
+        cityName.sendKeys(invalidData[7]);
+        zipNumber.sendKeys(invalidData[8]);
+        mobNumber.sendKeys(invalidData[9]);
+
+        // Try To Click Crate Button
+        createBtn.click();
+        System.out.println("Registration with Blank completed ");
+    }
 
 	/**
 	 * Click continue button after successful registration
@@ -184,9 +227,9 @@ public class RegPage extends BasePage {
 	public void clickContinue() {
 		try {
 			clickElement(continueBtn);
-			System.out.println("✅ Continue button clicked");
+			System.out.println("Continue button clicked");
 		} catch (Exception e) {
-			System.err.println("❌ Error clicking continue button: " + e.getMessage());
+			System.err.println("Error clicking continue button: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -204,15 +247,8 @@ public class RegPage extends BasePage {
 	 * Check if email already exists error is displayed
 	 */
 	public boolean isEmailExistsErrorDisplayed() {
-		return isElementDisplayed(emailExistsMsg);
-	}
-
-	/**
-	 * Get account created message text
-	 */
-//	public String getAccountCreatedMessage() {
-//		return getElementText(accountCreatedMsg);
-//	}
+        return isElementDisplayed(emailExistsMsg);
+    }
 
 	/**
 	 * Get email exists error message text
@@ -247,9 +283,9 @@ public class RegPage extends BasePage {
 			cityName.clear();
 			zipNumber.clear();
 			mobNumber.clear();
-			System.out.println("✅ All fields cleared");
+			System.out.println("All fields cleared");
 		} catch (Exception e) {
-			System.err.println("❌ Error clearing fields: " + e.getMessage());
+			System.err.println("Error clearing fields: " + e.getMessage());
 		}
 	}
 }

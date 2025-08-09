@@ -7,22 +7,21 @@ import mariomedhatGo.dataproviders.TestDataProviders;
 public class CheckoutTests extends BaseTest {
 
     @Test(description = "Successful checkout process", groups = {"smoke", "checkout"},
-            dataProvider = "paymentData", dataProviderClass = TestDataProviders.class)
-    public void testSuccessfulCheckout(String cardName, String cardNumber, String cvc,
-                                       String month, String year) throws InterruptedException {
+            dataProvider = "registAndPayment", dataProviderClass = TestDataProviders.class)
+    public void testSuccessfulCheckout(String[] registAndPaymentData) throws InterruptedException {
         // Register and add product
-        setupUserAndProduct();
+
 
         // Complete checkout
         productPage.proceedToCheckout();
         productPage.clickPlaceOrder();
 
-        boolean paymentSuccess = orderPayment.completePaymentProcess(cardName, cardNumber, cvc, month, year);
+        boolean paymentSuccess = orderPayment.completePaymentProcess(registAndPaymentData);
 
         Assert.assertTrue(paymentSuccess, "Payment was not successful");
         Assert.assertTrue(orderPayment.isPaymentSuccessful(), "Success message not displayed");
 
-        System.out.println("✅ Successful checkout test passed with card: " + cardName);
+        System.out.println("Successful checkout test passed with card");
     }
 
     @Test(description = "Checkout with invalid payment data", groups = {"regression"},
@@ -30,7 +29,7 @@ public class CheckoutTests extends BaseTest {
     public void testCheckoutWithInvalidPayment(String cardName, String cardNumber, String cvc,
                                                String month, String year) throws InterruptedException {
         // Register and add product
-        setupUserAndProduct();
+
 
         // Try checkout with invalid data
         productPage.proceedToCheckout();
@@ -45,7 +44,7 @@ public class CheckoutTests extends BaseTest {
         boolean paymentFailed = orderPayment.isPaymentFailed() || !orderPayment.isPaymentSuccessful();
         Assert.assertTrue(paymentFailed, "Payment should have failed with invalid data");
 
-        System.out.println("✅ Invalid payment test passed for card: " + cardNumber);
+        System.out.println("Invalid payment test passed for card: " + cardNumber);
     }
 
     @Test(description = "Guest checkout functionality", groups = {"regression"})
@@ -57,18 +56,18 @@ public class CheckoutTests extends BaseTest {
         Assert.assertTrue(driver.getCurrentUrl().contains("view_cart"), "Not on cart page");
         Assert.assertTrue(productPage.isCartNotEmpty(), "Cart is empty for guest user");
 
-        System.out.println("✅ Guest checkout test passed");
+        System.out.println("Guest checkout test passed");
     }
 
     // Helper method for common setup
-    private void setupUserAndProduct() throws InterruptedException {
-        navigateToSignup();
-        regPage.enterSignupInfo("Checkout Tester", email);
-        regPage.completeRegistration("password123", "Checkout", "Tester", "TestCorp",
-                "123 Checkout St", "Apt 1", "CA", "TestCity", "12345", "1234567890");
-        regPage.clickContinue();
-
-        navigateToProducts();
-        productPage.addProductToCart("Blue Cotton Indie Mickey Dress");
-    }
+//    private void setupUserAndProduct() throws InterruptedException {
+//        navigateToSignup();
+//        regPage.enterSignupInfo("Checkout Tester", email);
+//        regPage.completeRegistration("password123", "Checkout", "Tester", "TestCorp",
+//                "123 Checkout St", "Apt 1", "CA", "TestCity", "12345", "1234567890");
+//        regPage.clickContinue();
+//
+//        navigateToProducts();
+//        productPage.addProductToCart("Blue Cotton Indie Mickey Dress");
+//    }
 }
