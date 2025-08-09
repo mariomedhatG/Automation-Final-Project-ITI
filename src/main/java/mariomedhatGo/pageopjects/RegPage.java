@@ -83,12 +83,11 @@ public class RegPage extends BasePage {
 	@FindBy(css = "a[data-qa='continue-button']")
 	private WebElement continueBtn;
 
-	// Success/Error message elements
-//	@FindBy(xpath = "//h2[contains(text(),'Account Created!')]")
-//	private WebElement accountCreatedMsg;
-
 	@FindBy(xpath = "//form[@action='/signup']//p[text()='Email Address already exist!']")
 	private WebElement emailExistsMsg;
+
+    @FindBy(css = "a[href='/logout']")
+    private WebElement logoutBtn;
 
 	// ===== Page Actions =====
 
@@ -131,9 +130,9 @@ public class RegPage extends BasePage {
 			clickElement(newsLetter);
 			clickElement(optinChkbox);
 
-			System.out.println("✅ Basic account info filled successfully");
+			System.out.println("Basic account info filled successfully");
 		} catch (Exception e) {
-			System.err.println("❌ Error filling basic account info: " + e.getMessage());
+			System.err.println("Error filling basic account info: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -203,23 +202,23 @@ public class RegPage extends BasePage {
             System.out.println("Registration with Blank completed ");
 	}
 
-    public void completeRegistrationWithInvalidData(String[] invalidData){
-        // Enter Data
-        password.sendKeys(invalidData[0]);
-        userFname.sendKeys(invalidData[1]);
-        userLname.sendKeys(invalidData[2]);
-        companyName.sendKeys(invalidData[3]);
-        addressOne.sendKeys(invalidData[4]);
-        addressTwo.sendKeys(invalidData[5]);
-        stateName.sendKeys(invalidData[6]);
-        cityName.sendKeys(invalidData[7]);
-        zipNumber.sendKeys(invalidData[8]);
-        mobNumber.sendKeys(invalidData[9]);
-
-        // Try To Click Crate Button
-        createBtn.click();
-        System.out.println("Registration with Blank completed ");
-    }
+//    public void completeRegistrationWithInvalidData(String[] invalidData){
+//        // Enter Data
+//        password.sendKeys(invalidData[0]);
+//        userFname.sendKeys(invalidData[1]);
+//        userLname.sendKeys(invalidData[2]);
+//        companyName.sendKeys(invalidData[3]);
+//        addressOne.sendKeys(invalidData[4]);
+//        addressTwo.sendKeys(invalidData[5]);
+//        stateName.sendKeys(invalidData[6]);
+//        cityName.sendKeys(invalidData[7]);
+//        zipNumber.sendKeys(invalidData[8]);
+//        mobNumber.sendKeys(invalidData[9]);
+//
+//        // Try To Click Crate Button
+//        createBtn.click();
+//        System.out.println("Registration with Blank completed ");
+//    }
 
 	/**
 	 * Click continue button after successful registration
@@ -233,6 +232,16 @@ public class RegPage extends BasePage {
 			throw e;
 		}
 	}
+
+    public void logout(){
+        try{
+            clickElement(logoutBtn);
+            System.out.println("User Logged Out");
+        } catch (Exception e){
+            System.err.println("Error in Log Out" + e.getMessage());
+            throw e;
+        }
+    }
 
 	// ===== Validation Methods =====
 

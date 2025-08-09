@@ -55,7 +55,7 @@ public class BaseTest {
             config.load(fis);
             baseUrl = config.getProperty("base.url", "https://automationexercise.com/");
         } catch (IOException e) {
-            System.err.println("⚠️ Config file not found, using default values");
+            System.err.println("Config file not found, using default values");
             baseUrl = "https://automationexercise.com/";
         }
     }
@@ -105,7 +105,7 @@ public class BaseTest {
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
         driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
 
-        // إضافة WebDriverWait
+        // WebDriverWait
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
@@ -116,10 +116,10 @@ public class BaseTest {
             wait.until(webDriver -> ((org.openqa.selenium.JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState").equals("complete"));
 
-            System.out.println("✅ Application loaded successfully: " + baseUrl);
+            System.out.println("Application loaded successfully: " + baseUrl);
 
         } catch (Exception e) {
-            System.err.println("❌ Error navigating to application: " + e.getMessage());
+            System.err.println("Error navigating to application: " + e.getMessage());
             throw e;
         }
     }
@@ -135,7 +135,7 @@ public class BaseTest {
         System.out.println(" Generated test email: " + email);
     }
 
-    // إصلاح Common helper methods for tests
+    // Common helper methods for tests
     protected void navigateToSignup() {
         try {
             String signupUrl = baseUrl + "login";
@@ -145,10 +145,10 @@ public class BaseTest {
             wait.until(webDriver -> ((org.openqa.selenium.JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState").equals("complete"));
 
-            System.out.println("✅ Navigated to signup page: " + signupUrl);
+            System.out.println("Navigated to signup page: " + signupUrl);
 
         } catch (Exception e) {
-            System.err.println("❌ Error navigating to signup: " + e.getMessage());
+            System.err.println("Error navigating to signup: " + e.getMessage());
             throw e;
         }
     }
@@ -188,7 +188,7 @@ public class BaseTest {
             System.out.println("Page Title: " + driver.getTitle());
             System.out.println("Window Handle: " + driver.getWindowHandle());
         } catch (Exception e) {
-            System.err.println("❌ Error logging current state: " + e.getMessage());
+            System.err.println("Error logging current state: " + e.getMessage());
         }
     }
 
@@ -198,7 +198,7 @@ public class BaseTest {
                     org.openqa.selenium.support.ui.ExpectedConditions.alertIsPresent()
             );
             String alertText = alert.getText();
-            System.out.println("⚠️ Alert detected: " + alertText);
+            System.out.println("Alert detected: " + alertText);
             alert.accept();
         } catch (Exception e) {
             // No alert present, continue
@@ -210,7 +210,7 @@ public class BaseTest {
         if (driver != null) {
             try {
                 // Log final state for debugging
-                System.out.println("🏁 Test completed. Final URL: " + driver.getCurrentUrl());
+                System.out.println("Test completed. Final URL: " + driver.getCurrentUrl());
 
                 // Handle any remaining alerts
                 handleAlertIfPresent();

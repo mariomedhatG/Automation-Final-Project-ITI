@@ -6,7 +6,7 @@ import mariomedhatGo.dataproviders.TestDataProviders;
 
 public class SearchTests extends BaseTest {
 
-    @Test(description = "Product search with various keywords", groups = {"regression", "search"},
+    @Test(description = "Product search with various keywords", groups = {"sanity"},
             dataProvider = "searchData", dataProviderClass = TestDataProviders.class)
     public void testProductSearch(String searchTerm) throws InterruptedException {
         navigateToProducts();
@@ -16,10 +16,10 @@ public class SearchTests extends BaseTest {
                 "Search results not displayed for: " + searchTerm);
 
         int resultCount = productPage.getProductCount();
-        System.out.println("✅ Search for '" + searchTerm + "' returned " + resultCount + " results");
+        System.out.println("Search for '" + searchTerm + "' returned " + resultCount + " results");
     }
 
-    @Test(description = "Search with empty string", groups = {"regression", "search"})
+    @Test(description = "Search with empty string", groups = {"sanity"})
     public void testEmptySearch() throws InterruptedException {
         navigateToProducts();
         productPage.searchForProduct("");
@@ -28,10 +28,10 @@ public class SearchTests extends BaseTest {
         boolean validResult = productPage.areSearchResultsDisplayed() || productPage.getProductCount() > 0;
         Assert.assertTrue(validResult, "Empty search didn't handle properly");
 
-        System.out.println("✅ Empty search test passed");
+        System.out.println("Empty search test passed");
     }
 
-    @Test(description = "Search with special characters", groups = {"regression", "search"})
+    @Test(description = "Search with special characters", groups = {"sanity"})
     public void testSpecialCharacterSearch() throws InterruptedException {
         navigateToProducts();
         productPage.searchForProduct("@#$%");
@@ -39,10 +39,10 @@ public class SearchTests extends BaseTest {
         // Should handle gracefully without errors
         Assert.assertTrue(driver.getCurrentUrl().contains("products"), "Search with special chars failed");
 
-        System.out.println("✅ Special character search test passed");
+        System.out.println("Special character search test passed");
     }
 
-    @Test(description = "Case insensitive search", groups = {"regression", "search"})
+    @Test(description = "Case insensitive search", groups = {"sanity"})
     public void testCaseInsensitiveSearch() throws InterruptedException {
         navigateToProducts();
 
@@ -60,6 +60,6 @@ public class SearchTests extends BaseTest {
         Assert.assertEquals(lowerCaseResults, upperCaseResults,
                 "Case insensitive search not working properly");
 
-        System.out.println("✅ Case insensitive search test passed");
+        System.out.println("Case insensitive search test passed");
     }
 }

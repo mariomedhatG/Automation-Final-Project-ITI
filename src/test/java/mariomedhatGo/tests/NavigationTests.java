@@ -54,7 +54,7 @@ public class NavigationTests extends BaseTest {
         System.out.println("Footer navigation test passed");
     }
 
-    @Test(description = "Back button functionality", groups = {"regression", "navigation"})
+    @Test(description = "Back button functionality", groups = {"smoke" , "sanity"})
     public void testBackButtonFunctionality() throws InterruptedException {
         // Navigate to products
         navigateToProducts();

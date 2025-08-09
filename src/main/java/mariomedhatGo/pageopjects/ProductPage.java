@@ -23,7 +23,6 @@ public class ProductPage extends BasePage {
 	private By productName = By.tagName("p");
 	private By addToCartBtn = By.xpath("//div[@class='overlay-content']//a[@data-product-id='21']");
 
-	// إصلاح المشكلة: استخدام FindBy بدلاً من By
 	@FindBy(xpath = "//u[normalize-space()='View Cart']")
 	private WebElement viewCartBtn;
 
@@ -91,7 +90,7 @@ public class ProductPage extends BasePage {
 					clickElement(addBtn);
 
 					productFound = true;
-					System.out.println("✅ Product added to cart: " + productWanted);
+					System.out.println("Product added to cart: " + productWanted);
 					break;
 				}
 			}
@@ -107,10 +106,10 @@ public class ProductPage extends BasePage {
 
 			// Click View Cart
 			clickElement(viewCartBtn);
-			System.out.println("➡️ Current URL after clicking view cart: " + driver.getCurrentUrl());
+			System.out.println("Current URL after clicking view cart: " + driver.getCurrentUrl());
 
 		} catch (Exception e) {
-			System.err.println("❌ Error adding product to cart: " + e.getMessage());
+			System.err.println("Error adding product to cart: " + e.getMessage());
 			e.printStackTrace();
 			throw e;
 		}
@@ -175,20 +174,20 @@ public class ProductPage extends BasePage {
 					}
 
 					WebElement addBtn = product.findElement(By.xpath(".//a[contains(@class, 'add-to-cart')]"));
-					System.out.println("🎯 Found Add to Cart button for: " + productName);
+					System.out.println("Found Add to Cart button for: " + productName);
 					waitForElementToBeClickable(addBtn);
-					System.out.println("🔍 Is displayed: " + addBtn.isDisplayed());
-					System.out.println("🔍 Is enabled: " + addBtn.isEnabled());
+					System.out.println("Is displayed: " + addBtn.isDisplayed());
+					System.out.println("Is enabled: " + addBtn.isEnabled());
 					//clickElement(addBtn);
 					actions.moveToElement(addBtn).pause(Duration.ofMillis(500)).click().perform();
 
 
-					System.out.println("✅ Single product added: " + productName);
+					System.out.println("Single product added: " + productName);
 					break;
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("❌ Error adding single product: " + e.getMessage());
+			System.err.println("Error adding single product: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -200,7 +199,7 @@ public class ProductPage extends BasePage {
 		try {
 			wait.until(ExpectedConditions.elementToBeClickable(continueShoppingBtn));
 			clickElement(continueShoppingBtn);
-			System.out.println("✅ Continue shopping clicked");
+			System.out.println("Continue shopping clicked");
 
 			// Wait for the modal to disappear
 			try {
@@ -210,14 +209,12 @@ public class ProductPage extends BasePage {
 			}
 
 		} catch (Exception e) {
-			System.err.println("❌ Error clicking continue shopping: " + e.getMessage());
+			System.err.println("Error clicking continue shopping: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	/**
-	 * Search for products
-	 */
+	//Search for products
 	public void searchForProduct(String searchTerm) {
 		try {
 			waitForElementToBeVisible(searchBox);
@@ -230,47 +227,42 @@ public class ProductPage extends BasePage {
 					ExpectedConditions.presenceOfElementLocated(products)
 			));
 
-			System.out.println("✅ Product search completed for: " + searchTerm);
+			System.out.println("Product search completed for: " + searchTerm);
 		} catch (Exception e) {
-			System.err.println("❌ Error searching for product: " + e.getMessage());
+			System.err.println("Error searching for product: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	/**
-	 * Proceed to checkout
-	 */
+	//Proceed to checkout
 	public void proceedToCheckout() {
 		try {
 			scrollToElement(checkoutBtn);
 			waitForElementToBeClickable(checkoutBtn);
 			clickElement(checkoutBtn);
-			System.out.println("✅ Proceeded to checkout");
+			System.out.println("Proceeded to checkout");
 		} catch (Exception e) {
-			System.err.println("❌ Error proceeding to checkout: " + e.getMessage());
+			System.err.println("Error proceeding to checkout: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	/**
-	 * Click place order button
-	 */
+	//Click place order button
+
 	public void clickPlaceOrder() {
 		try {
 			scrollToElement(placeOrderBtn);
 			clickElement(placeOrderBtn);
-			System.out.println("✅ Place order button clicked");
+			System.out.println("Place order button clicked");
 		} catch (Exception e) {
-			System.err.println("❌ Error clicking place order: " + e.getMessage());
+			System.err.println("Error clicking place order: " + e.getMessage());
 			throw e;
 		}
 	}
 
 	// ===== Validation Methods =====
 
-	/**
-	 * Check if we're on products page
-	 */
+	//Check if we're on products page
 	public boolean isOnProductsPage() {
 		try {
 			return wait.until(ExpectedConditions.visibilityOf(allProductsTitle)).isDisplayed();
@@ -279,9 +271,8 @@ public class ProductPage extends BasePage {
 		}
 	}
 
-	/**
-	 * Check if search results are displayed
-	 */
+	//Check if search results are displayed
+
 	public boolean areSearchResultsDisplayed() {
 		try {
 			return wait.until(ExpectedConditions.visibilityOf(searchResultsTitle)).isDisplayed();
@@ -290,22 +281,19 @@ public class ProductPage extends BasePage {
 		}
 	}
 
-	/**
-	 * Get number of products displayed
-	 */
+	//Get number of products displayed
+
 	public int getProductCount() {
 		try {
 			List<WebElement> productsList = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(products));
 			return productsList.size();
 		} catch (Exception e) {
-			System.err.println("❌ Error getting product count: " + e.getMessage());
+			System.err.println("Error getting product count: " + e.getMessage());
 			return 0;
 		}
 	}
 
-	/**
-	 * Check if specific product exists
-	 */
+	//Check if specific product exists
 	public boolean isProductDisplayed(String productName) {
 		try {
 			List<WebElement> allProducts = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(products));
@@ -318,14 +306,12 @@ public class ProductPage extends BasePage {
 			}
 			return false;
 		} catch (Exception e) {
-			System.err.println("❌ Error checking if product is displayed: " + e.getMessage());
+			System.err.println("Error checking if product is displayed: " + e.getMessage());
 			return false;
 		}
 	}
 
-	/**
-	 * Get all product names on the page
-	 */
+	//Get all product names on the page
 	public String[] getAllProductNames() {
 		try {
 			List<WebElement> allProducts = driver.findElements(products);
@@ -337,14 +323,12 @@ public class ProductPage extends BasePage {
 
 			return productNames;
 		} catch (Exception e) {
-			System.err.println("❌ Error getting all product names: " + e.getMessage());
+			System.err.println("Error getting all product names: " + e.getMessage());
 			return new String[0];
 		}
 	}
 
-	/**
-	 * Check if cart has items
-	 */
+	//Check if cart has items
 	public boolean isCartNotEmpty() {
 		try {
 			// Wait longer for cart page to load completely
@@ -356,13 +340,11 @@ public class ProductPage extends BasePage {
 			return true;
 
 		} catch (Exception e) {
-			System.err.println("❌ Error: Cart validation failed. Error: " + e.getMessage());
-
-			// تشيك إضافي للتأكد
+			System.err.println("Error: Cart validation failed. Error: " + e.getMessage());
 			try {
 				// Check if we're actually on cart page
 				if (!driver.getCurrentUrl().contains("view_cart")) {
-					System.err.println("❌ Not on cart page. Current URL: " + driver.getCurrentUrl());
+					System.err.println("Not on cart page. Current URL: " + driver.getCurrentUrl());
 					return false;
 				}
 
@@ -373,35 +355,9 @@ public class ProductPage extends BasePage {
 				return hasItems;
 
 			} catch (Exception ex) {
-				System.err.println("❌ Secondary cart check failed: " + ex.getMessage());
+				System.err.println("Secondary cart check failed: " + ex.getMessage());
 				return false;
 			}
-		}
-	}
-
-	/**
-	 * Get quantity of first item in cart
-	 */
-	public String getCartItemQuantity() {
-		try {
-			waitForElementToBeVisible(quantityInCart);
-			return getElementText(quantityInCart);
-		} catch (Exception e) {
-			System.err.println("❌ Error getting cart quantity: " + e.getMessage());
-			return "0";
-		}
-	}
-
-	/**
-	 * Get total price of item in cart
-	 */
-	public String getCartItemTotalPrice() {
-		try {
-			waitForElementToBeVisible(itemTotalPrice);
-			return getElementText(itemTotalPrice);
-		} catch (Exception e) {
-			System.err.println("❌ Error getting cart total price: " + e.getMessage());
-			return "0";
 		}
 	}
 }

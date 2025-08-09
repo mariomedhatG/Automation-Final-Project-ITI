@@ -11,7 +11,7 @@ public class RegistrationTests extends BaseTest {
     private String registeredUserEmail;
     private boolean isUserRegistered = false;
 
-    @Test(description = "Successful user registration", groups = {"smoke", "registration"}
+    @Test(description = "Successful user registration", groups = {"smoke" , "sanity"}
     , dataProvider = "registrationData" , dataProviderClass = TestDataProviders.class)
     public void testSuccessfulRegistration(String[] registData) {
         try {
@@ -50,7 +50,7 @@ public class RegistrationTests extends BaseTest {
         }
     }
 
-    @Test(description = "Registration with existing email", groups = {"regression"},
+    @Test(description = "Registration with existing email", groups = {"sanity"},
             dependsOnMethods = {"testSuccessfulRegistration"})
     public void testRegistrationWithExistingEmail() {
         try {
@@ -72,7 +72,7 @@ public class RegistrationTests extends BaseTest {
         }
     }
 
-    @Test(description = "Registration with blank fields", groups = {"regression"})
+    @Test(description = "Registration with blank fields", groups = {"sanity"})
     public void testRegistrationWithBlankFields() {
         try {
             // Navigate to signup page
@@ -96,7 +96,7 @@ public class RegistrationTests extends BaseTest {
         }
 }
 
-    @Test(description = "Registrtion with blank fields in sign up form" , groups = {"smoke"},
+    @Test(description = "Registrtion with blank fields in sign up form" , groups = {"sanity"},
     dataProvider = "registrationDataBlankFields" , dataProviderClass = TestDataProviders.class)
     public void testSignupFieldsWithBlankFields(String[] blankData) {
         try{
@@ -123,7 +123,7 @@ public class RegistrationTests extends BaseTest {
         }
     }
 
-    @Test(description = "Registrtion with Invalid data in sign up form" , groups = {"smoke"},
+    @Test(description = "Registrtion with Invalid data in sign up form" , groups = {"sanity"},
     dataProvider = "registrationInvalidDataBlankFields" , dataProviderClass = TestDataProviders.class)
     public void testSignupFieldsWithInvalidData (String[] invalidData) {
         try{

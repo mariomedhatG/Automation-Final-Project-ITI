@@ -71,9 +71,9 @@ public class OrderPayment extends BasePage {
 		try {
 			fillPaymentInfo(cardName, cardNum, cvcNum, expMonth, expYear);
 			submitPayment();
-			System.out.println("✅ Payment submitted successfully");
+			System.out.println("Payment submitted successfully");
 		} catch (Exception e) {
-			System.err.println("❌ Error submitting payment: " + e.getMessage());
+			System.err.println("Error submitting payment: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -90,9 +90,9 @@ public class OrderPayment extends BasePage {
 			sendKeysToElement(expiryMonth, expMonth);
 			sendKeysToElement(expiryYear, expYear);
 
-			System.out.println("✅ Payment information filled");
+			System.out.println("Payment information filled");
 		} catch (Exception e) {
-			System.err.println("❌ Error filling payment info: " + e.getMessage());
+			System.err.println("Error filling payment info: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -104,9 +104,9 @@ public class OrderPayment extends BasePage {
 		try {
 			scrollToElement(submitBtn);
 			clickElement(submitBtn);
-			System.out.println("✅ Payment form submitted");
+			System.out.println("Payment form submitted");
 		} catch (Exception e) {
-			System.err.println("❌ Error submitting payment form: " + e.getMessage());
+			System.err.println("Error submitting payment form: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -117,9 +117,9 @@ public class OrderPayment extends BasePage {
 	public void clickContinue() {
 		try {
 			clickElement(continueBtn);
-			System.out.println("✅ Continue button clicked after order");
+			System.out.println("Continue button clicked after order");
 		} catch (Exception e) {
-			System.err.println("❌ Error clicking continue button: " + e.getMessage());
+			System.err.println("Error clicking continue button: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -137,14 +137,14 @@ public class OrderPayment extends BasePage {
 			Thread.sleep(2000);
 
 			if (isPaymentSuccessful()) {
-				System.out.println("✅ Payment completed successfully");
+				System.out.println("Payment completed successfully");
 				return true;
 			} else {
-				System.out.println("❌ Payment failed");
+				System.out.println("Payment failed");
 				return false;
 			}
 		} catch (Exception e) {
-			System.err.println("❌ Error in payment process: " + e.getMessage());
+			System.err.println("Error in payment process: " + e.getMessage());
 			return false;
 		}
 	}
@@ -231,9 +231,9 @@ public class OrderPayment extends BasePage {
 			cvc.clear();
 			expiryMonth.clear();
 			expiryYear.clear();
-			System.out.println("✅ Payment fields cleared");
+			System.out.println("Payment fields cleared");
 		} catch (Exception e) {
-			System.err.println("❌ Error clearing payment fields: " + e.getMessage());
+			System.err.println("Error clearing payment fields: " + e.getMessage());
 		}
 	}
 

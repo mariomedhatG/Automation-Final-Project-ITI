@@ -1,212 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="E-Commerce Test Suite" parallel="classes" thread-count="3" verbose="1">
 
-<suite name="Combined Test Suite" verbose="1">
-
-    <!-- Listeners Configuration -->
+    <!-- Listeners for enhanced reporting and retry mechanism -->
     <listeners>
         <listener class-name="mariomedhatGo.listeners.TestListener"/>
         <listener class-name="mariomedhatGo.listeners.AnnotationTransformer"/>
     </listeners>
 
-    <!-- Global Parameters -->
     <parameter name="browser" value="chrome"/>
 
-
+    <!-- Smoke Test Suite - Critical functionality -->
     <test name="Smoke Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.SmokeTests">
-                <methods>
-                    <include name="verifyHomePage"/>
-                    <include name="verifyProductsPage"/>
-                    <include name="verifySignupPage"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Registration Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
         <classes>
             <class name="mariomedhatGo.tests.RegistrationTests">
                 <methods>
                     <include name="testSuccessfulRegistration"/>
-                    <include name="testRegistrationWithExistingEmail"/>
-                    <include name="testRegistrationWithBlankFields"/>
                 </methods>
             </class>
-        </classes>
-    </test>
-
-    <test name="Product Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
             <class name="mariomedhatGo.tests.ProductTests">
                 <methods>
-                    <include name="testAddSingleProductToCart"/>
-                    <include name="testAddMultipleProductsToCart"/>
-                    <include name="testProductSearch"/>
                     <include name="testVerifyAllProductsPage"/>
                 </methods>
             </class>
-        </classes>
-    </test>
-
-    <test name="Search Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.SearchTests">
+            <class name="mariomedhatGo.tests.E2e">
                 <methods>
-                    <include name="testProductSearch"/>
-                    <include name="testEmptySearch"/>
-                    <include name="testSpecialCharacterSearch"/>
-                    <include name="testCaseInsensitiveSearch"/>
+                    <include name="E2eValidScenario"/>
+                    <include name="testMultipleProductsCheckout"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Checkout Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
+    <!-- Sanity Test Suite - Basic functionality verification -->
+    <test name="Sanity Tests" preserve-order="false">
+        <groups>
+            <run>
+                <include name="sanity"/>
+            </run>
+        </groups>
         <classes>
-            <class name="mariomedhatGo.tests.CheckoutTests">
-                <methods>
-                    <include name="testSuccessfulCheckout"/>
-                    <include name="testCheckoutWithInvalidPayment"/>
-                    <include name="testGuestCheckout"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Validation Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.ValidationTests">
-                <methods>
-                    <include name="testInvalidRegistrationData"/>
-                    <include name="testPaymentFormValidation"/>
-                    <include name="testUrlValidation"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Navigation Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.NavigationTests">
-                <methods>
-                    <include name="testMainMenuNavigation"/>
-                    <include name="testBreadcrumbNavigation"/>
-                    <include name="testFooterNavigation"/>
-                    <include name="testBackButtonFunctionality"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Performance Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.PerformanceTests">
-                <methods>
-                    <include name="testPageLoadTime"/>
-                    <include name="testMultipleRapidClicks"/>
-                    <include name="testMemoryLeakPrevention"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Error Handling Tests" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.ErrorHandlingTests">
-                <methods>
-                    <include name="testNetworkInterruption"/>
-                    <include name="testInvalidUrlHandling"/>
-                    <include name="testBrowserRefreshHandling"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Original Test Cases" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.AutomationTestCases">
-                <methods>
-                    <include name="TC01_RegisterUserSuccessfully"/>
-                    <include name="TC02_RegisterWithExistingEmail"/>
-                    <include name="TC03_RegisterWithBlankFields"/>
-                    <include name="TC04_AddSingleProductToCart"/>
-                    <include name="TC05_AddMultipleProductsToCart"/>
-                    <include name="TC06_SearchProduct"/>
-                    <include name="TC07_VerifyProductsPage"/>
-                    <include name="TC08_SuccessfulCheckout"/>
-                    <include name="TC09_CheckoutWithInvalidPayment"/>
-                    <include name="TC10_GuestCheckout"/>
-                    <include name="TC11_LoginLogoutFunctionality"/>
-                    <include name="TC12_VerifyHomePage"/>
-                    <include name="TC13_SlowConnectionHandling"/>
-                    <include name="TC14_NavigationTest"/>
-                    <include name="TC15_DataValidationTest"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Cross Browser Tests - Chrome" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
-            <class name="mariomedhatGo.tests.CrossBrowserTests"/>
-        </classes>
-    </test>
-
-    <test name="Cross Browser Tests - Firefox" preserve-order="true">
-        <parameter name="browser" value="firefox"/>
-        <classes>
-            <class name="mariomedhatGo.tests.CrossBrowserTests"/>
-        </classes>
-    </test>
-
-    <test name="Regression Tests" preserve-order="false">
-        <parameter name="browser" value="chrome"/>
-        <packages>
-            <package name="mariomedhatGo.tests"/>
-        </packages>
-    </test>
-
-
-
-
-    <listeners>
-        <listener class-name="mariomedhatGo.listeners.TestListener"/>
-        <listener class-name="mariomedhatGo.listeners.AnnotationTransformer"/>
-    </listeners>
-
-    <test name="Registration Suite - Chrome" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
+            <class name="mariomedhatGo.tests.E2e"/>
             <class name="mariomedhatGo.tests.RegistrationTests"/>
-        </classes>
-    </test>
-
-    <test name="Product Suite - Chrome" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
             <class name="mariomedhatGo.tests.ProductTests"/>
-        </classes>
-    </test>
-
-    <test name="Checkout Suite - Chrome" preserve-order="true">
-        <parameter name="browser" value="chrome"/>
-        <classes>
             <class name="mariomedhatGo.tests.CheckoutTests"/>
+            <class name="mariomedhatGo.tests.SearchTests"/>
+            <class name="mariomedhatGo.tests.NavigationTests"/>
         </classes>
     </test>
-
 
 </suite>
